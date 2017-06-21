@@ -1,60 +1,37 @@
+// @flow
+import type {SchemaDef, Type} from './flowtypes'
+
 import * as types from './types'
+import {createHelpfulError} from './helpfulError'
+import inspect from 'object-inspect'
+import {compileRegistry} from './compileRegistry'
+import {validateSchemaDef} from './validation/validateSchema'
 
-function compileRegistry(schemaDef) {
-  const registry = Object.assign(Object.create(null), types)
-
-  const defsByName = schemaDef.types.reduce((acc, def) => {
-    if (acc[def.name]) {
-      throw new Error(`Duplicate type name added to schema: ${def.name}`)
+export default {
+  compile: function (schemaDef: SchemaDef) {
+    if (!(schemaDef && typeof schemaDef === 'object' && Array.isArray(schemaDef.types) && schemaDef.name && typeof schemaDef.name === 'string')) {
+      throw createHelpfulError(
+        `Expected schema to be an object with a name and an array of types, instead got ${inspect(schemaDef)}`,
+        'schema-compile-invalid-arguments'
+      )
     }
-    acc[def.name] = def
-    return acc
-  }, {})
 
-  schemaDef.types.forEach(add)
+    const validation = validateSchemaDef(schemaDef, types)
 
-  return registry
+    const registry = compileRegistry(schemaDef, types)
 
-  function ensure(typeName) {
-    if (!registry[typeName]) {
-      if (!defsByName[typeName]) {
-        throw new Error(`Unknown type: ${typeName}`)
+    return {
+      name: schemaDef.name,
+      get(name: string): Type {
+        return registry[name] && registry[name].get()
+      },
+
+      has(name: string): boolean {
+        return name in registry
+      },
+      getTypeNames(): string[] {
+        return Object.keys(registry)
       }
-      add(defsByName[typeName])
     }
-
-  }
-  function extendMember(memberDef) {
-    ensure(memberDef.type)
-    return registry[memberDef.type].extend(memberDef, extendMember).get()
-  }
-  function add(typeDef) {
-    ensure(typeDef.type)
-    if (registry[typeDef.name]) {
-      return
-    }
-    registry[typeDef.name] = registry[typeDef.type].extend(typeDef, extendMember)
-  }
-}
-
-export default class Schema {
-  static compile(schemaDef) {
-    return new Schema(schemaDef)
-  }
-  constructor(schemaDef) {
-    this._original = schemaDef
-    this._registry = compileRegistry(schemaDef)
-  }
-  get name() {
-    return this._original.name
-  }
-  get(name) {
-    return this._registry[name] && this._registry[name].get()
-  }
-  has(name) {
-    return name in this._registry
-  }
-  getTypeNames() {
-    return Object.keys(this._registry)
   }
 }

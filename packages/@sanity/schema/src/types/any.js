@@ -1,6 +1,6 @@
 import {pick, omit} from 'lodash'
 
-const OVERRIDABLE_FIELDS = ['jsonType', 'type', 'name', 'title', 'description', 'options', 'fieldsets']
+const OVERRIDABLE_FIELDS = ['name', 'title', 'description', 'options', 'fieldsets']
 
 const ANY_CORE = {
   name: 'any',
