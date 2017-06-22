@@ -12,10 +12,25 @@ export type SchemaDef = {
   types: Array<TypeDef>
 }
 
-export type Type = any
-export type Registry = { [string]: Type }
+export type Type = {
+  name: string
+}
 
-export type CompileProblem = {
-  level: 'warning' | 'info' | 'error',
-  message: string
+export type ValidationResult = {
+  severity: 'warning' | 'info' | 'error',
+  message: string,
+  helpId?: string,
+  path?: string[],
+}
+
+export type TypeFactory = {
+  get() : TypeFactory,
+  extend: (TypeDef) => TypeFactory,
+  validate: (TypeDef) => ValidationResult
+}
+
+export type Registry = { [string]: TypeFactory }
+
+export type IndexedTypes = {
+  [string]: TypeDef
 }

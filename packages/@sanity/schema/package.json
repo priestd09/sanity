@@ -12,6 +12,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@sanity/generate-help-url": "^0.106.21",
+    "object-inspect": "^1.2.2",
+    "arrify": "^1.0.1",
+    "lodash": "^4.17.4"
+  },
   "devDependencies": {
     "@types/node": "6.0.52",
     "babel-cli": "^6.24.0",
@@ -28,16 +34,10 @@
     "eslint": "^3.19.0",
     "eslint-config-sanity": "^2.1.4",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jest": "^20.0.3",
     "interop-require": "^1.0.0",
-    "jest-cli": "^20.0.4",
     "recursive-readdir": "^2.1.0",
     "rimraf": "^2.6.1"
-  },
-  "dependencies": {
-    "@sanity/generate-help-url": "^0.106.21",
-    "object-inspect": "^1.2.2",
-    "arrify": "^1.0.1",
-    "lodash": "^4.17.4"
   },
   "jest": {
     "testMatch": ["**/test/**/*.test.js"]

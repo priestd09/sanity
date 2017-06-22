@@ -1,0 +1,11 @@
+{
+  "env": {
+    "jest/globals": true
+  },
+  "rules": {
+    "max-nested-callbacks": "off"
+  },
+  "plugins": [
+    "jest"
+  ]
+}
