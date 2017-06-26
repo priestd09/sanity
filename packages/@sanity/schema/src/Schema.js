@@ -1,11 +1,16 @@
 // @flow
 import inspect from 'object-inspect'
-import type {SchemaDef, Type} from './flowtypes'
+import type {SchemaDef, Type, ValidationResult} from './flowtypes'
 import * as types from './types'
+import * as typeValidations from './validation/types'
 import {createHelpfulError} from './helpfulError'
 import {compileRegistry} from './compileRegistry'
+import createValidator from './validation/createValidator'
 
 export default {
+  validate(schemaDef: SchemaDef) : Array<ValidationResult> {
+    return createValidator(typeValidations).validate((schemaDef))
+  },
   compile(schemaDef: SchemaDef) {
     if (!(schemaDef && typeof schemaDef === 'object' && Array.isArray(schemaDef.types) && schemaDef.name && typeof schemaDef.name === 'string')) {
       throw createHelpfulError(

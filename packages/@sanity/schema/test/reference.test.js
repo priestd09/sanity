@@ -1,58 +1,58 @@
-import validator from '../src/validation/types/array'
+import validator from '../src/validation/types/reference'
 import {shapeOf, someWith} from './utils'
 
-describe('array types', () => {
+describe('reference types', () => {
 
-  test('array type with no `of`', () => {
+  test('reference type with no `to`', () => {
     const result = validator.validate({
       name: 'foo'
     })
 
     expect(result).toEqual(
       someWith(shapeOf({
-        helpId: 'schema-array-type-of-must-be-array',
+        helpId: 'schema-reference-type-to-must-be-array',
         severity: 'error',
         message: expect.any(String)
       })))
   })
 
-  test('array type with invalid value of `of`', () => {
+  test('reference type with invalid value for `to`', () => {
     const result = validator.validate({
       name: 'foo',
-      of: {}
+      to: 'bar'
     })
     expect(result).toEqual(
       someWith(shapeOf({
-        helpId: 'schema-array-type-of-must-be-array',
+        helpId: 'schema-reference-type-to-must-be-array',
         severity: 'error',
         message: expect.any(String)
       })))
   })
 
-  test('array type with multiple members of same type', () => {
+  test('reference type with multiple members to same type', () => {
     const result = validator.validate({
       name: 'foo',
-      of: [
+      to: [
         {type: 'object'},
         {type: 'object'}
       ]
     }, () => [])
     expect(result).toEqual(
       someWith(shapeOf({
-        helpId: 'schema-array-type-of-must-have-unique-types',
+        helpId: 'schema-reference-type-to-must-have-unique-types',
         severity: 'error',
         message: expect.any(String)
       })))
   })
 })
 
-describe('array subtypes', () => {
-  test('array subtype with `of`', () => {
+describe('reference subtypes', () => {
+  test('reference subtype with `to`', () => {
 
     const result = validator.validateMember({
       name: 'foo',
       type: 'customArray',
-      of: []
+      to: []
     })
 
     expect(result).toEqual(

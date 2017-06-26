@@ -2,8 +2,8 @@
 import type {TypeDef, ValidationResult} from '../../flowtypes'
 import {error, warning} from '../createValidationResult'
 import inspect from '../../inspect'
-
 export default {
+  PROPS: ['name', 'type', 'title', 'description', 'preview', 'options'],
   validate(typeDef: TypeDef): Array<ValidationResult> {
     const result = []
     if (typeof typeDef.name !== 'string') {
@@ -17,7 +17,7 @@ export default {
     if (typeof typeDef.type !== 'string') {
       result.push(
         error(
-          `Type is missing or having an invalid value for 'name': ${inspect(typeDef)}`,
+          `Type is missing or having an invalid value for 'type': ${inspect(typeDef)}`,
           'schema-type-invalid-or-missing-attr-type'
         )
       )

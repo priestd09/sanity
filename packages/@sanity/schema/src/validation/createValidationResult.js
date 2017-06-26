@@ -14,7 +14,10 @@ const KNOWN_HELP_IDS = [
   'schema-object-type-fields-must-be-array',
   'schema-object-type-fields-not-unique',
   'schema-type-invalid-or-missing-attr-title',
-  'schema-array-type-of-must-be-array'
+  'schema-array-type-of-must-be-array',
+  'schema-array-type-of-must-have-unique-types',
+  'schema-reference-type-to-must-be-array',
+  'schema-reference-type-to-must-have-unique-types',
 ]
 
 function createValidationResult(severity: string, message: string, helpId: ?string,

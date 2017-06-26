@@ -30,7 +30,7 @@ function validateField(field: Field, validateMember: MemberValidator): Array<Val
   const {name, fieldset, ...fieldType} = field
 
   const fieldValidation = [
-    field.name.startsWith('_') && error(
+    (field.name || '').startsWith('_') && error(
       `Invalid field name "${field.name}". Field names cannot start with underscores "_" as it's reserved for system fields.`,
     ),
     !VALID_FIELD_RE.test(field.name) && error(`Invalid field name: ${field.name}. Fields must match ${String(VALID_FIELD_RE)}`),
@@ -56,7 +56,7 @@ export default {
       getDuplicateFields(fieldsWithNames).forEach(dupes => {
         result.push(
           error(
-            `Found fields with duplicate name ${dupes[0].name} in ${inspect(typeDef)}`,
+            `Found ${dupes.length} fields with name "${dupes[0].name}" in ${inspect(typeDef)}`,
             'schema-object-type-fields-not-unique'
           )
         )
@@ -70,7 +70,7 @@ export default {
   },
   validateMember(memberTypeDef: TypeDef): Array<ValidationResult> {
     const problems = []
-    if (memberTypeDef.fields) {
+    if (memberTypeDef.type !== 'object' && memberTypeDef.fields) {
       problems.push(error('Cannot overwrite the `fields` property on object types', 'schema-subtype-inheritance'))
     }
     return problems

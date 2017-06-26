@@ -10,13 +10,6 @@ type IndexedTypes = {
 
 type MemberValidator = (TypeDef) => Array<ValidationResult>
 
-type Validators = {
-  [string]: {
-    validate: (TypeDef, MemberValidator) => Array<ValidationResult>,
-    validateMember: (TypeDef) => Array<ValidationResult>
-  }
-}
-
 function isValidTypeName(typeName: any) {
   return typeof typeName === 'string' && typeName
 }
@@ -64,12 +57,12 @@ function inSchema(typeName: string, indexed: IndexedTypes, builtinValidators: Ob
 function createMemberValidator(indexedTypes: IndexedTypes, builtinValidators: Validators): MemberValidator {
   return memberTypeDef => {
     if (!inSchema(memberTypeDef.type, indexedTypes, builtinValidators)) {
-      return [error(`Type of member ${inspect(memberTypeDef)} is not in schema`)]
+      return [error(`The type "${memberTypeDef.type}" is not in schema`)]
     }
     const validator = builtinValidators[memberTypeDef.type]
     return [
       ...baseTypeValidator.validateMember(memberTypeDef),
-      ...validator.validateMember(memberTypeDef)
+      ...(validator ? validator.validateMember(memberTypeDef) : [])
     ]
   }
 }
@@ -88,7 +81,7 @@ function validateType(typeDef: TypeDef, indexedTypes, builtinValidators: Validat
   const validator = builtinValidators[typeDef.type]
   return [
     ...baseTypeValidator.validate(typeDef),
-    ...validator.validate(typeDef, validateMemberType)
+    ...(validator ? validator.validate(typeDef, validateMemberType) : [])
   ]
 }
 
