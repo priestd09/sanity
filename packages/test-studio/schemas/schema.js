@@ -13,6 +13,7 @@ import arrays from './arrays'
 import files from './files'
 import code from './code'
 import recursive from './recursive'
+import recursiveArray from './recursiveArray'
 import numbers from './numbers'
 import booleans from './booleans'
 import dates from './dates'
@@ -42,6 +43,7 @@ export default createSchema({
     customInputs,
     myImage,
     recursive,
+    recursiveArray,
     myObject,
     codeInputType,
     notitle

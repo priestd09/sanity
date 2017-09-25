@@ -106,7 +106,7 @@ export default class Item<T: ItemValue> extends React.Component<*, Props, *> {
 
     return (
       <div className={styles.popupAnchor}>
-        <EditItemPopOver title={memberType.title} onClose={this.handleEditStop}>
+        <EditItemPopOver onClose={this.handleEditStop} key={`popOver${item._key}`}>
           {content}
         </EditItemPopOver>
       </div>
@@ -167,8 +167,10 @@ export default class Item<T: ItemValue> extends React.Component<*, Props, *> {
               </ConfirmButton>
             )}
           </div>
+          <div className={styles.editRoot}>
+            {isEditing && this.renderEditItemForm(value)}
+          </div>
         </div>
-        {isEditing && this.renderEditItemForm(value)}
       </div>
     )
   }
