@@ -1,0 +1,13 @@
+[
+  {
+    "_type": "block",
+    "children": [
+      {
+        "_type": "span",
+        "marks": ["strong"],
+        "text": "Strong text"
+      }
+    ],
+    "style": "normal"
+  }
+]
