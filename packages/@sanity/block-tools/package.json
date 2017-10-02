@@ -23,12 +23,11 @@
   "author": "Sanity.io <hello@sanity.io>",
   "license": "MIT",
   "dependencies": {
-    "@sanity/schema": "^0.113.7",
     "get-random-values": "^1.2.0",
-    "lodash": "^4.17.4",
-    "slate-html-serializer": "^0.1.12"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
+    "@sanity/schema": "^0.113.7",
     "assert": "^1.4.1",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
