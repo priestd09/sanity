@@ -1,14 +1,14 @@
-/* global describe, it */
-
 import assert from 'assert'
 import fs from 'fs'
 import path from 'path'
+
 import HtmlDeserializer from '../../../src/htmlDeserializer'
 import {DEFAULT_BLOCK} from '../../../src/constants'
 import {JSDOM} from 'jsdom'
 import xpath from 'xpath'
 
 describe('htmlDeserializer', () => {
+
   const tests = fs.readdirSync(__dirname)
 
   tests.forEach(test => {

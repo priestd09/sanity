@@ -1,5 +1,5 @@
 {
-  "name": "@sanity/html-deserializer",
+  "name": "@sanity/block-tools",
   "version": "0.114.1",
   "description": "Can format HTML, Slate JSON or Sanity block array into any other format.",
   "main": "lib/index.js",
@@ -9,7 +9,15 @@
     "compile:watch": "npm run compile -- --watch",
     "prepublish": "in-publish && npm run compile && sanity-check || not-in-publish",
     "lint": "eslint src --quiet",
-    "test": "./node_modules/.bin/mocha ./test/tests/**/*.test.js --compilers js:babel-register --bail --reporter=list"
+    "test": "NODE_ENV=test jest",
+    "coverage": "NODE_ENV=test jest --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupTestFrameworkScriptFile": "./test/setup.js",
+    "collectCoverageFrom": [
+      "src/**.js"
+    ]
   },
   "keywords": [],
   "author": "Sanity.io <hello@sanity.io>",
@@ -45,8 +53,8 @@
     "flow-bin": "^0.54.1",
     "flow-typed": "^2.0.0",
     "in-publish": "^2.0.0",
+    "jest": "^21.2.1",
     "jsdom": "11.3.0",
-    "mocha": "^3.5.3",
     "xpath": "^0.0.24"
   },
   "peerDependencies": {},

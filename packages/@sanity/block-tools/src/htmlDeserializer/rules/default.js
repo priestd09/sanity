@@ -1,7 +1,7 @@
 import {uniq} from 'lodash'
 
 import randomKey from '../../util/randomKey'
-import {DEFAULT_BLOCK} from '../../constants'
+import {DEFAULT_BLOCK, DEFAULT_SPAN} from '../../constants'
 import {tagName} from '../helpers'
 
 export const HTML_BLOCK_TAGS = {
@@ -101,7 +101,7 @@ export default function createDefaultRules(blockContentType, options = {}) {
         const isValidText = (el.textContent !== ' ' && tagName(el.parentNode) !== 'body')
         if (el.nodeName === '#text' && isValidText) {
           return {
-            _type: 'span',
+            ...DEFAULT_SPAN,
             marks: [],
             text: el.value || el.nodeValue
           }
@@ -180,7 +180,7 @@ export default function createDefaultRules(blockContentType, options = {}) {
         listItem.data.listItem = resolveListItem(tagName(el.parentNode))
         return {
           ...listItem,
-          nodes: next(el.childNodes)
+          children: next(el.childNodes)
         }
       }
     },
@@ -193,9 +193,9 @@ export default function createDefaultRules(blockContentType, options = {}) {
           return undefined
         }
         return {
-          kind: 'mark',
-          type: decorator,
-          nodes: next(el.childNodes)
+          _type: '__decorator',
+          name: decorator,
+          children: next(el.childNodes)
         }
       }
     },
@@ -212,29 +212,24 @@ export default function createDefaultRules(blockContentType, options = {}) {
         if (!href) {
           return next(el.childNodes)
         }
-        let data
+        let markDef
         if (linkEnabled) {
-          data = {
-            annotations: {
-              link: {
-                _key: randomKey(12),
-                _type: 'link',
-                href: href
-              }
-            }
+          markDef = {
+            _key: randomKey(12),
+            _type: 'link',
+            href: href
           }
         }
         return {
-          kind: 'inline',
-          type: 'span',
-          nodes: linkEnabled
+          _type: '__annotation',
+          markDef: markDef,
+          children: linkEnabled
             ? next(el.childNodes)
             : (
               el.appendChild(
-                new Text(` (${href})`)
+                new Text(` (${href})`) // TODO: make server side compatible
               ) && next(el.childNodes)
-            ),
-          data: data
+            )
         }
       }
     }

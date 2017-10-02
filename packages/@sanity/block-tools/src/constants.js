@@ -13,3 +13,8 @@ export const DEFAULT_BLOCK = Object.freeze({
   _type: 'block',
   style: BLOCK_DEFAULT_STYLE
 })
+
+export const DEFAULT_SPAN = Object.freeze({
+  _type: 'span',
+  marks: []
+})

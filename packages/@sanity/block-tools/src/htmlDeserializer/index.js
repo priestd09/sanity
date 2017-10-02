@@ -8,6 +8,7 @@ import {createRuleOptions, preprocess, defaultParseHtml} from './helpers'
  *
  */
 
+
 class HtmlDeserializer {
 
   /**
@@ -33,6 +34,7 @@ class HtmlDeserializer {
       const doc = preprocess(html, parseHtml)
       return doc.body
     }
+    this.activeMarkDefs = []
   }
 
   /**
@@ -64,34 +66,13 @@ class HtmlDeserializer {
 
       const block = {
         ...defaultBlock,
-        children: [node],
+        children: [node]
       }
 
       memo.push(block)
       return memo
     }, [])
 
-    // // TODO: pretty sure this is no longer needed.
-    // if (nodes.length == 0) {
-    //   nodes = [{
-    //     kind: 'block',
-    //     data: {},
-    //     isVoid: false,
-    //     ...defaultBlock,
-    //     nodes: [
-    //       {
-    //         kind: 'text',
-    //         ranges: [
-    //           {
-    //             kind: 'range',
-    //             text: '',
-    //             marks: [],
-    //           }
-    //         ]
-    //       }
-    //     ],
-    //   }]
-    // }
     return nodes
   }
 
@@ -127,7 +108,7 @@ class HtmlDeserializer {
    * @return {Any}
    */
 
-  deserializeElement = element => {
+  deserializeElement = element => { // eslint-disable-line complexity
 
     let node
     if (!element.tagName) {
@@ -168,8 +149,14 @@ class HtmlDeserializer {
         continue
       } else if (ret === null) {
         return null
-      } else if (ret.kind === 'mark') {
-        node = this.deserializeMark(ret)
+      } else if (ret._type === '__decorator') {
+        node = this.deserializeDecorator(ret)
+      } else if (ret._type === '__annotation') {
+        node = this.deserializeAnnotation(ret)
+      } else if (ret._type === 'block' && this.activeMarkDefs.length) {
+        ret.markDefs = this.activeMarkDefs
+        this.activeMarkDefs = []
+        node = ret
       } else {
         node = ret
       }
@@ -180,36 +167,63 @@ class HtmlDeserializer {
   }
 
   /**
-   * Deserialize a `mark` object.
+   * Deserialize a `__decorator` object.
    *
-   * @param {Object} mark
+   * @param {Object} decorator
    * @return {Array}
    */
 
-  deserializeMark = mark => {
-    const {type, data} = mark
-    const applyMark = node => {
-      if (node.kind == 'mark') {
-        return this.deserializeMark(node)
-      } else if (node.kind == 'text') {
-        node.ranges = node.ranges.map(range => {
-          range.marks = range.marks || []
-          range.marks.push({type, data})
-          return range
-        })
+  deserializeDecorator = decorator => {
+    const {name} = decorator
+    const applyDecorator = node => {
+      if (node._type === '__decorator') {
+        return this.deserializeDecorator(node)
+      } else if (node._type === 'span') {
+        node.marks = node.marks || []
+        node.marks.unshift(name)
       } else {
-        node.nodes = node.nodes.map(applyMark)
+        node.children = node.children.map(applyDecorator)
       }
       return node
     }
-
-    return mark.nodes.reduce((nodes, node) => {
-      const ret = applyMark(node)
+    return decorator.children.reduce((children, node) => {
+      const ret = applyDecorator(node)
       if (Array.isArray(ret)) {
-        return nodes.concat(ret)
+        return children.concat(ret)
       }
-      nodes.push(ret)
-      return nodes
+      children.push(ret)
+      return children
+    }, [])
+  }
+
+  /**
+   * Deserialize a `__annotation` object.
+   *
+   * @param {Object} annotation
+   * @return {Array}
+   */
+
+  deserializeAnnotation = annotation => {
+    const {markDef} = annotation
+    this.activeMarkDefs.push(markDef)
+    const applyAnnotation = node => {
+      if (node._type === '__annotation') {
+        return this.deserializeAnnotation(node)
+      } else if (node._type === 'span') {
+        node.marks = node.marks || []
+        node.marks.unshift(markDef._key)
+      } else {
+        node.children = node.children.map(applyAnnotation)
+      }
+      return node
+    }
+    return annotation.children.reduce((children, node) => {
+      const ret = applyAnnotation(node)
+      if (Array.isArray(ret)) {
+        return children.concat(ret)
+      }
+      children.push(ret)
+      return children
     }, [])
   }
 
