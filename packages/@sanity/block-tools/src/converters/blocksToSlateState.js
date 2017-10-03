@@ -109,7 +109,7 @@ function sanityBlocksArrayToRawNodes(blockArray, type) {
     .map(item => sanityBlockItemToRawNode(item, type))
 }
 
-export default function blocksToSlateJson(array, type) {
+export default function blocksToSlateState(array, type) {
   const defaultNodes = [{...SLATE_DEFAULT_BLOCK, nodes: [{kind: 'text', text: ''}]}]
   return {
     kind: 'state',

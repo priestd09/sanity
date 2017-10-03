@@ -1,8 +1,8 @@
 // @flow
 
 import HtmlDeserializer from './HtmlDeserializer'
-import blocksToSlateJson from './converters/blocksToSlateJson'
-import slateJsonToBlocks from './converters/slateJsonToBlocks'
+import blocksToSlateJson from './converters/blocksToSlateState'
+import slateStateToBlocks from './converters/slateStateToBlocks'
 import blockContentTypeToOptions from './util/blockContentTypeToOptions'
 
 /**
@@ -40,8 +40,8 @@ export default {
    * @param {Object} blockContentType
    * @returns {Array} Blocks
    */
-  slateJsonToBlocks(slateJson, blockContentType) {
-    return slateJsonToBlocks(slateJson, blockContentType)
+  slateStateToBlocks(slateJson, blockContentType) {
+    return slateStateToBlocks(slateJson, blockContentType)
   },
 
   /**
@@ -52,8 +52,8 @@ export default {
    * @returns {Object} An object representing the structure of the Slate JSON.
    */
 
-  blocksToSlateJson(blocks, blockContentType) {
-    return blocksToSlateJson(blocks, blockContentType)
+  blocksToSlateState(blocks, blockContentType) {
+    return blocksToSlateState(blocks, blockContentType)
   },
 
   /**

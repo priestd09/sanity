@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import blockTools from '../../../../src'
 
-describe('slateJsonToBlocks', () => {
+describe('slateStateToBlocks', () => {
   const tests = fs.readdirSync(__dirname)
   tests.forEach(test => {
     if (test[0] === '.' || path.extname(test).length > 0) {
@@ -14,7 +14,7 @@ describe('slateJsonToBlocks', () => {
       const input = JSON.parse(fs.readFileSync(path.resolve(dir, 'input.json')))
       const expected = JSON.parse(fs.readFileSync(path.resolve(dir, 'output.json')))
       const fn = require(path.resolve(dir)).default // eslint-disable-line import/no-dynamic-require
-      const output = fn(blockTools.slateJsonToBlocks, input)
+      const output = fn(blockTools.slateStateToBlocks, input)
       assert.deepEqual(output, expected)
     })
   })

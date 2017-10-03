@@ -11,17 +11,17 @@ import blockTools from '@sanity/block-tools'
 const blocks = blockTools.htmlToBlocks(html, options)
 
 // Convert Slate JSON to blocks
-const blocks = blockTools.slateJsonToBlocks(slateJson)
+const blocks = blockTools.slateStateToBlocks(slateJson)
 
-// Convert blocks to Slate JSON
-const slateJson = blockTools.blocksToSlateJson(blocks)
+// Convert blocks to a serialized Slate state
+const slateJson = blockTools.blocksToSlateState(blocks)
 
 
 ```
 
 ## Methods
 
-### ``htmlToBlocks(html, options)``
+### ``htmlToBlocks(html, options)`` (html deserializer)
 
 This will deserialize the input html (string) into blocks.
 
@@ -44,15 +44,42 @@ that parses the html into a DOMParser compatible model / API.
 ```
 const jsdom = require('jsdom')
 const {JSDOM} = jsdom
-import blockTools from '@sanity/block-tools'
 
-blockTools.htmlToBlocks(
+import blockTools from '@sanity/block-tools'
+import Schema from '@sanity/schema'
+
+export default Schema.compile({
+  name: 'myBlog',
+  types: [
+    {
+      type: 'object',
+      name: 'blogPost',
+      fields: [
+        {
+          title: 'Title',
+          type: 'string',
+          name: 'title'
+        },
+        {
+          title: 'Body',
+          name: 'body',
+          type: 'array',
+          of: [{type: 'block'}]
+        }
+      ]
+    }
+  ]
+})
+
+const blocks = blockTools.htmlToBlocks(
   '<html><body><h1>Hello world!</h1><body></html>',
   {
     blockContentType: compiledBlockContentType,
     parseHtml: html => new JSDOM(html)
   }
 )
+
+
 ```
 
 ##### ``rules``
@@ -94,17 +121,17 @@ blockTools.htmlToBlocks(
 
 ```
 
-### slateJsonToBlocks
+### slateStateToBlocks
 
 TODO: write here
 
-### slateJsonToBlocks
+### slateStateToBlocks
 
 TODO: write here
 
 ### blockTypeFeatures(blockContentType)
 
-Will return an object with the features enabled for blockContentType (compiled schema type):
+Will return an object with the features enabled for the input block content schema (compiled).
 
 ```
 {
