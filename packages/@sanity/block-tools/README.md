@@ -21,17 +21,24 @@ const slateJson = blockTools.blocksToSlateJson(blocks)
 
 ## Methods
 
-### htmlToBlocks
+### ``htmlToBlocks(html, options)``
 
-This will deserialize HTML into blocks.
+This will deserialize the input html (string) into blocks.
 
-#### Using it server side with the ``parseHtml`` option
+#### Options
+
+##### ``blockContentType``
+
+A compiled version of the block content schema type. When you give this options,
+the deserialization will respect the schema for what is allowed to be in the resulting blocks.
+
+##### ``parseHtml``
 The HTML-deserialization is done by default by the browser's native DOMParser.
 On the server side you can give the function ``parseHtml``
 that parses the html into a DOMParser compatible model / API.
 
 
-##### JSDOM example
+###### JSDOM example
 
 ```
 const jsdom = require('jsdom')
@@ -47,7 +54,7 @@ blockTools.htmlToBlocks(
 )
 ```
 
-#### Adding extra HTML deserialization rules
+##### ``rules``
 
 You may add your own rules to deal with special HTML cases.
 
@@ -84,4 +91,31 @@ blockTools.htmlToBlocks(
   }
 )
 
+```
+
+### blockTypeFeatures(blockContentType)
+
+Will return an object with the features enabled for blockContentType (compiled schema type):
+
+```
+{
+  enabledBlockAnnotations: ['link'],
+  enabledSpanDecorators: [
+    'strong',
+    'em',
+    'code',
+    'underline',
+    'strike-through'
+  ],
+  enabledBlockStyles: [
+    'normal',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'blockquote'
+  ]
+}
 ```

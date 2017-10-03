@@ -1,6 +1,9 @@
+// @flow
+
 import HtmlDeserializer from './HtmlDeserializer'
 import blocksToSlateJson from './converters/blocksToSlateJson'
 import slateJsonToBlocks from './converters/slateJsonToBlocks'
+import blockContentTypeToOptions from './util/blockContentTypeToOptions'
 
 /**
  * BlockTools - various tools for Sanity block content
@@ -9,7 +12,6 @@ import slateJsonToBlocks from './converters/slateJsonToBlocks'
  *    The compiled schema for the block content type to work with
  *
  */
-
 export default {
 
   /**
@@ -17,27 +19,49 @@ export default {
    *
    * @param {String} html
    *
-   * @param {Object} blockContentType
-   *    The compiled block content type which the deserializer will respect.
-   *
    * @param {Object} options
+   *   @property {Object} blockContentType
+   *      A compiled version of the schema type for the block content
    *   @property {Array} rules
    *      Optional rules working on the HTML (will be ruled first)
    *   @property {Function} parseHtml
    *      API compatible model as returned from DOMParser for using server side.
+   * @returns {Array} Blocks
    */
-
   htmlToBlocks(html, options = {}) {
     const deserializer = new HtmlDeserializer(options)
     return deserializer.deserialize(html)
   },
 
-  slateJsonToBlocks(slateJson) {
-    return slateJsonToBlocks(slateJson)
+  /**
+   * Convert Slate JSON (previously called Raw) to blocks
+   *
+   * @param {Object} An object representing the structure of the Slate JSON.
+   * @param {Object} blockContentType
+   * @returns {Array} Blocks
+   */
+  slateJsonToBlocks(slateJson, blockContentType) {
+    return slateJsonToBlocks(slateJson, blockContentType)
   },
 
-  blocksToSlateJson(blocks) {
-    return blocksToSlateJson(blocks)
+  /**
+   * Convert blocks to Slate JSON (previously called Raw)
+   *
+   * @param {Array} blocks
+   * @param {Object} blockContentType
+   * @returns {Object} An object representing the structure of the Slate JSON.
+   */
+
+  blocksToSlateJson(blocks, blockContentType) {
+    return blocksToSlateJson(blocks, blockContentType)
+  },
+
+  /**
+   * Convert blocks to Slate JSON (previously called Raw)
+   *
+   */
+  blockTypeFeatures(blockType) {
+    return blockContentTypeToOptions(blockType)
   }
 
 }

@@ -1,4 +1,5 @@
-// Converts a persisted array to a slate compatible json document
+// @flow
+
 import {get, flatten} from 'lodash'
 
 function toSanitySpan(blockNode, sanityBlock) {
@@ -43,13 +44,11 @@ function toSanitySpan(blockNode, sanityBlock) {
 }
 
 function toSanityBlock(block) {
-  // debugger
   if (block.type === 'contentBlock') {
     const sanityBlock = {
       ...block.data,
       _type: 'block',
-      _key: block.key,
-      markDefs: []
+      markDefs: block.data.markDefs || []
     }
     sanityBlock.children = flatten(block.nodes.map(node => {
       return toSanitySpan(node, sanityBlock)

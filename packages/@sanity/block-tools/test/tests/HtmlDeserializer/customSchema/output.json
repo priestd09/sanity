@@ -4,6 +4,7 @@
     "children": [
       { "_type": "span", "marks": [], "text": "A heading that is not allowed" }
     ],
+    "markDefs": [],
     "style": "normal"
   }
 ]

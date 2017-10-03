@@ -4,6 +4,7 @@
     "children": [
       { "_type": "span", "marks": ["code"], "text": "const foo = 'bar'" }
     ],
+    "markDefs": [],
     "style": "normal"
   }
 ]

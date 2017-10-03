@@ -63,7 +63,6 @@ function sanitySpanToRawSlateBlockNode(span, sanityBlock) {
     kind: 'inline',
     isVoid: false,
     type: 'span',
-    key: span._key,
     data: {annotations},
     nodes: [{kind: 'text', ranges: [range]}]
   }
@@ -116,6 +115,7 @@ export default function blocksToSlateJson(array, type) {
     kind: 'state',
     document: {
       kind: 'document',
+      data: {},
       nodes: (array && array.length > 0) ? sanityBlocksArrayToRawNodes(array, type) : defaultNodes
     }
   }

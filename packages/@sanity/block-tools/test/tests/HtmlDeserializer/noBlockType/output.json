@@ -8,6 +8,7 @@
         "text": "Header"
       }
     ],
+    "markDefs": [],
     "style": "h5"
   },
   {
@@ -19,6 +20,7 @@
         "text": "Paragraph"
       }
     ],
+    "markDefs": [],
     "style": "normal"
   }
 ]

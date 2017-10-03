@@ -13,6 +13,7 @@ export const SLATE_DEFAULT_BLOCK = Object.freeze({
 
 export const DEFAULT_BLOCK = Object.freeze({
   _type: 'block',
+  markDefs: [],
   style: BLOCK_DEFAULT_STYLE
 })
 
