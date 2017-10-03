@@ -1,20 +1,51 @@
 # Sanity Block Tools
 
-Various tools for Sanity block content.
+Various tools for processing Sanity block content
 
 ## Interface
 
-```
+Let's start with a complete example:
+
+```js
+import Schema from '@sanity/schema'
 import blockTools from '@sanity/block-tools'
 
-// Convert HTML to blocks
-const blocks = blockTools.htmlToBlocks(html, options)
+// The compiled schema type for the content type that holds the block array
+const blockContentType = Schema.compile({
+  name: 'myBlog',
+  types: [
+    {
+      type: 'object',
+      name: 'blogPost',
+      fields: [
+        {
+          title: 'Title',
+          type: 'string',
+          name: 'title'
+        },
+        {
+          title: 'Body',
+          name: 'body',
+          type: 'array',
+          of: [{type: 'block'}]
+        }
+      ]
+    }
+  ]
+})
 
-// Convert Slate JSON to blocks
+
+// Convert HTML to blocks
+const blocks = blockTools.htmlToBlocks(
+  '<html><body><h1>Hello world!</h1><body></html>',
+  {blockContentType}
+)
+
+// Convert a Slate state to blocks
 const blocks = blockTools.slateStateToBlocks(slateJson)
 
-// Convert blocks to a serialized Slate state
-const slateJson = blockTools.blocksToSlateState(blocks)
+// Convert blocks to a JSON serialized Slate state
+const slateState = blockTools.blocksToSlateState(blocks)
 
 
 ```
@@ -41,40 +72,14 @@ that parses the html into a DOMParser compatible model / API.
 
 ###### JSDOM example
 
-```
+```js
 const jsdom = require('jsdom')
 const {JSDOM} = jsdom
-
-import blockTools from '@sanity/block-tools'
-import Schema from '@sanity/schema'
-
-export default Schema.compile({
-  name: 'myBlog',
-  types: [
-    {
-      type: 'object',
-      name: 'blogPost',
-      fields: [
-        {
-          title: 'Title',
-          type: 'string',
-          name: 'title'
-        },
-        {
-          title: 'Body',
-          name: 'body',
-          type: 'array',
-          of: [{type: 'block'}]
-        }
-      ]
-    }
-  ]
-})
 
 const blocks = blockTools.htmlToBlocks(
   '<html><body><h1>Hello world!</h1><body></html>',
   {
-    blockContentType: compiledBlockContentType,
+    blockContentType,
     parseHtml: html => new JSDOM(html)
   }
 )
@@ -86,15 +91,15 @@ const blocks = blockTools.htmlToBlocks(
 
 You may add your own rules to deal with special HTML cases.
 
-```
+```js
 blockTools.htmlToBlocks(
   '<html><body><pre><code>const foo = 'bar'</code></pre></body></html>',
   {
     blockContentType: compiledBlockContentType,
     parseHtml: html => new JSDOM(html),
     rules: [
-      // Special rule for code blocks (wrapped in pre and code tag)
 
+      // Special rule for code blocks (wrapped in pre and code tag)
       {
         deserialize(el, next) {
           if (el.tagName.toLowerCase() != 'pre') {
@@ -115,25 +120,28 @@ blockTools.htmlToBlocks(
           }
         }
       }
+
     ]
   }
 )
 
 ```
 
-### slateStateToBlocks
+### ``blocksToSlateState(blocks, blockContentTypeSchema)``
 
-TODO: write here
+Convert blocks to a serialized Slate state respecting the input schema.
 
-### slateStateToBlocks
 
-TODO: write here
+### ``slateStateToBlocks(slateState, blockContentTypeSchema)``
+
+Convert a slate state to blocks respecting the input schema.
+
 
 ### blockTypeFeatures(blockContentType)
 
 Will return an object with the features enabled for the input block content schema (compiled).
 
-```
+```js
 {
   enabledBlockAnnotations: ['link'],
   enabledSpanDecorators: [
