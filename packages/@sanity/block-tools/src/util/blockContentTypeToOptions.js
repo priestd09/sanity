@@ -1,3 +1,10 @@
+import {
+  DEFAULT_SUPPORTED_STYLES,
+  DEFAULT_SUPPORTED_DECORATORS,
+  DEFAULT_SUPPORTED_ANNOTATIONS
+} from '../constants'
+
+
 function resolveEnabledStyles(blockType) {
   const styleField = blockType.fields.find(btField => btField.name === 'style')
   if (!styleField) {
@@ -21,17 +28,19 @@ function resolveEnabledDecorators(spanType) {
 }
 
 export default function blockContentTypeToOptions(blockContentType) {
-  const blockType = blockContentType.of.find(field => field.name === 'block')
-  if (!blockType) {
-    throw new Error("'block' type is not defined in this schema (required).")
+  let blockType
+  let spanType
+  if (blockContentType) {
+    blockType = blockContentType.of.find(field => field.name === 'block')
+    if (!blockType) {
+      throw new Error("'block' type is not defined in this schema (required).")
+    }
+    spanType = blockType.fields.find(field => field.name === 'spans')
+      .type.of.find(ofType => ofType.name === 'span')
   }
-
-  const spanType = blockType.fields.find(field => field.name === 'spans')
-    .type.of.find(ofType => ofType.name === 'span')
-
   return {
-    enabledBlockStyles: resolveEnabledStyles(blockType),
-    enabledBlockDecorators: resolveEnabledDecorators(spanType),
-    enabledBlockAnnotations: resolveEnabledAnnotationTypes(spanType)
+    enabledBlockStyles: blockType ? resolveEnabledStyles(blockType) : DEFAULT_SUPPORTED_STYLES,
+    enabledSpanDecorators: spanType ? resolveEnabledDecorators(spanType) : DEFAULT_SUPPORTED_DECORATORS,
+    enabledBlockAnnotations: spanType ? resolveEnabledAnnotationTypes(spanType) : DEFAULT_SUPPORTED_ANNOTATIONS
   }
 }

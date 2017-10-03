@@ -1,0 +1,9 @@
+[
+  {
+    "_type": "block",
+    "children": [
+      { "_type": "span", "marks": ["code"], "text": "const foo = 'bar'" }
+    ],
+    "style": "normal"
+  }
+]

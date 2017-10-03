@@ -1,4 +1,4 @@
-import {XPathResult} from './index'
+import {_XPathResult} from './index'
 
 export default (html, doc) => {
 
@@ -21,7 +21,7 @@ export default (html, doc) => {
     unwantedWordDocumentPaths.join('|'),
     doc,
     null,
-    XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+    _XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
     null
   )
   for (let i = unwantedNodes.snapshotLength - 1; i >= 0; i--) {

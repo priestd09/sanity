@@ -2,7 +2,7 @@ import preprocessDefault from './default'
 import preprocessWord from './word'
 
 // We need this here if run server side
-export const XPathResult = {
+export const _XPathResult = {
   ANY_TYPE: 0,
   NUMBER_TYPE: 1,
   STRING_TYPE: 2,

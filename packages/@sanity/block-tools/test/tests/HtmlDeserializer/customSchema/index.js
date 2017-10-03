@@ -1,6 +1,6 @@
-import defaultSchema from '../../../fixtures/defaultSchema'
+import customSchema from '../../../fixtures/customSchema'
 
-const blockContentType = defaultSchema.get('blogPost')
+const blockContentType = customSchema.get('blogPost')
   .fields.find(field => field.name === 'body').type
 
 export default (html, blockTools, commonOptions) => {

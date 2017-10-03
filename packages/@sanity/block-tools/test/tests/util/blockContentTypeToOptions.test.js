@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import assert from 'assert'
 import blockContentTypeToOptions from '../../../src/util/blockContentTypeToOptions'
 import customSchema from '../../fixtures/customSchema'
@@ -13,7 +11,7 @@ describe('blockContentTypeToOptions', () => {
 
     const expected = {
       enabledBlockAnnotations: ['link'],
-      enabledBlockDecorators: [
+      enabledSpanDecorators: [
         'strong',
         'em',
         'code',
@@ -40,7 +38,7 @@ describe('blockContentTypeToOptions', () => {
 
     const expected = {
       enabledBlockAnnotations: ['author'],
-      enabledBlockDecorators: [
+      enabledSpanDecorators: [
         'strong',
         'em'
       ],

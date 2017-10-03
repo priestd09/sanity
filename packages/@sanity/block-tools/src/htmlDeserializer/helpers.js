@@ -19,11 +19,11 @@ import {
 export function createRuleOptions(blockContentType) {
   const options = blockContentTypeToOptions(blockContentType)
   const enabledBlockStyles = options.enabledBlockStyles || defaultSupportedStyles
-  const enabledBlockDecorators = options.enabledBlockDecorators || defaultSupportedDecorators
+  const enabledSpanDecorators = options.enabledSpanDecorators || defaultSupportedDecorators
   const enabledBlockAnnotations = options.enabledBlockAnnotations || defaultSupportedAnnotations
   return {
     enabledBlockStyles,
-    enabledBlockDecorators,
+    enabledSpanDecorators,
     enabledBlockAnnotations
   }
 }

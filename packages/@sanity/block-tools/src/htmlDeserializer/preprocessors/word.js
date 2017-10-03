@@ -1,4 +1,4 @@
-import {XPathResult} from './index'
+import {_XPathResult} from './index'
 
 function isWordHtml(html) {
   return /(class="?Mso|style=(?:"|')[^"]*?\bmso-|w:WordDocument|<o:\w+>|<\/font>)/.test(html)
@@ -35,7 +35,7 @@ export default (html, doc) => {
     unwantedPaths.join('|'),
     doc,
     null,
-    XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+    _XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
     null
   )
   for (let i = unwantedNodes.snapshotLength - 1; i >= 0; i--) {
@@ -48,7 +48,7 @@ export default (html, doc) => {
     mappedPaths.join('|'),
     doc,
     null,
-    XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+    _XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
     null
   )
   for (let i = mappedElements.snapshotLength - 1; i >= 0; i--) {

@@ -3,10 +3,10 @@ import defaultSchema from '../../../fixtures/defaultSchema'
 const blockContentType = defaultSchema.get('blogPost')
   .fields.find(field => field.name === 'body').type
 
-export default (input, HtmlDeserializer, commonOptions) => {
+export default (html, blockTools, commonOptions) => {
   const options = {
-    ...commonOptions
+    ...commonOptions,
+    blockContentType
   }
-  const htmlDeserializer = new HtmlDeserializer(blockContentType, options)
-  return htmlDeserializer.deserialize(input)
+  return blockTools.htmlToBlocks(html, options)
 }

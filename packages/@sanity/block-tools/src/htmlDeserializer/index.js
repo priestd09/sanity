@@ -8,21 +8,23 @@ import {createRuleOptions, preprocess, defaultParseHtml, tagName} from './helper
  *
  */
 
-
-class HtmlDeserializer {
+export default class HtmlDeserializer {
 
   /**
    * Create a new serializer respecting a Sanity block content type's schema
    *
    * @param {Object} options
+   *   @property {Object} blockContentType
+   *      A compiled version of the block content schema type
    *   @property {Array} rules
    *      Optional rules working on the HTML (will be ruled first)
    *   @property {Function} parseHtml
    *      API compatible model as returned from DOMParser for using server side.
    */
 
-  constructor(blockContentType, options = {}) {
+  constructor(options = {}) {
     const {rules = []} = options
+    const blockContentType = options.blockContentType
     const standardRules = createRules(
       blockContentType,
       createRuleOptions(blockContentType)
@@ -54,6 +56,8 @@ class HtmlDeserializer {
     // Ensure that all top-level inline nodes are wrapped into a block,
     // and that there are no blocks as children of a block
     nodes = nodes.reduce((memo, node, i, original) => {
+
+      // Move any blocks as children of a block to the root level
       if (i > 0 && node._type === 'block' && original[i - 1]._type === 'block') {
         const block = memo[memo.length - 1]
         const childBlocks = block.children.filter(child => child._type === 'block')
@@ -245,12 +249,3 @@ class HtmlDeserializer {
   }
 
 }
-
-
-/**
- * Export.
- *
- * @type {HtmlDeserializer}
- */
-
-export default HtmlDeserializer

@@ -84,8 +84,8 @@ function isEmpty(blocks) {
   return firstChild.text.length === 0
 }
 
-export default function slateJsonToSanityBlocks(raw) {
-  const nodes = get(raw, 'document.nodes')
+export default function slateJsonToBlocks(json) {
+  const nodes = get(json, 'document.nodes')
   if (!nodes || nodes.length === 0) {
     return undefined
   }

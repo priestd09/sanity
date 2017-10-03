@@ -1,82 +1,87 @@
-# Sanity Block Formatter
+# Sanity Block Tools
 
-Can serialize and deserialize HTML, Slate JSON or a Sanity block array.
+Various tools for Sanity block content.
 
 ## Interface
 
 ```
-const blogPostSchema = require('../schemas/blogPost.js')
-const formatter = new BlockFormatter(
-  '<html><body><h1>Hello world!</h1><body></html>'
-  {schema: blogPostSchema}
-)
+import blockTools from '@sanity/block-tools'
 
-// The input html will be deserialized into blocks
-const blocks = formatter.toBlocks()
+// Convert HTML to blocks
+const blocks = blockTools.htmlToBlocks(html, options)
 
-// The input html will not be deserialized into a Slate document,
-// but was already set when producing the blocks above. It is simply returned.
-const slateJson = formatter.toSlateJson()
+// Convert Slate JSON to blocks
+const blocks = blockTools.slateJsonToBlocks(slateJson)
+
+// Convert blocks to Slate JSON
+const slateJson = blockTools.blocksToSlateJson(blocks)
+
 
 ```
 
-## Options
+## Methods
 
-### Setting the ``schema`` option
-This is the Sanity block array schema, which will be respected
-when deserializing anything into blocks.
+### htmlToBlocks
 
-### Using it server side with the ``parseHtml`` and ``evaluate`` option
-The HTML-deserialization is done by default by the browser native DOMParser.
+This will deserialize HTML into blocks.
+
+#### Using it server side with the ``parseHtml`` option
+The HTML-deserialization is done by default by the browser's native DOMParser.
 On the server side you can give the function ``parseHtml``
 that parses the html into a DOMParser compatible model / API.
 
-This module also use the native document.evaluate by default for xpaths.
-On the server side you can give the function ``evaluate``
-that returns an API compatible function with document.evaluate.
 
-#### JSDOM and xpath example
+##### JSDOM example
 
 ```
 const jsdom = require('jsdom')
 const {JSDOM} = jsdom
-const xpath = require('xpath')
-const formatter = new BlockFormatter(
-  '<html><body><h1>Hello world!</h1><body></html>'
+import blockTools from '@sanity/block-tools'
+
+blockTools.htmlToBlocks(
+  '<html><body><h1>Hello world!</h1><body></html>',
   {
-    parseHtml: html => new JSDOM(html),
-    evaluate: xpath.evaluate
+    blockContentType: compiledBlockContentType,
+    parseHtml: html => new JSDOM(html)
   }
 )
 ```
 
-### Adding extra HTML deserialization rules
+#### Adding extra HTML deserialization rules
 
-You may add your own rules to deal with special HTML cases,
-following the pattern of the ``slate-html-deserializer``.
-
-HTML will always be deserialized into a Slate model first, then
-converted to blocks. See the file ``./formats/html`` for the default rules.
+You may add your own rules to deal with special HTML cases.
 
 ```
-options.htmlRules = [
+blockTools.htmlToBlocks(
+  '<html><body><h1>Hello world!</h1><body></html>',
   {
-    // Special case for code blocks (wrapped in pre and code tag)
-    deserialize(el, next) {
-      if (el.tagName.toLowerCase() != 'pre') {
-        return null
+    blockContentType: compiledBlockContentType,
+    parseHtml: html => new JSDOM(html),
+    rules: [
+      // Special rule for code blocks (wrapped in pre and code tag)
+
+      {
+        deserialize(el, next) {
+          if (el.tagName.toLowerCase() != 'pre') {
+            return undefined
+          }
+          const code = el.children[0]
+          const childNodes = code && code.tagName.toLowerCase() === 'code'
+            ? code.childNodes
+            : el.childNodes
+          let text = ''
+          childNodes.forEach(node => {
+            text += node.textContent
+          })
+          return {
+            _type: 'span',
+            marks: ['code'],
+            text: text
+          }
+        }
       }
-      const code = el.children[0]
-      const childNodes = code && code.tagName.toLowerCase() === 'code'
-        ? code.childNodes
-        : el.childNodes
-      return {
-        kind: 'block',
-        type: 'code',
-        nodes: next(childNodes)
-      }
-    }
-  },
-  ...
-]
+    ]
+  }
+)
+
 ```
