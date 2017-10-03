@@ -47,7 +47,7 @@ const {JSDOM} = jsdom
 import blockTools from '@sanity/block-tools'
 
 blockTools.htmlToBlocks(
-  '<html><body><h1>Hello world!</h1><body></html>',
+  '<html><body><pre><code>const foo = 'bar'</code></pre></body></html>',
   {
     blockContentType: compiledBlockContentType,
     parseHtml: html => new JSDOM(html)
