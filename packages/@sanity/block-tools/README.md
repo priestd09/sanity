@@ -42,10 +42,10 @@ const blocks = blockTools.htmlToBlocks(
 )
 
 // Convert a Slate state to blocks
-const blocks = blockTools.slateStateToBlocks(slateJson)
+const blocks = blockTools.slateStateToBlocks(slateJson, blockContentType)
 
 // Convert blocks to a JSON serialized Slate state
-const slateState = blockTools.blocksToSlateState(blocks)
+const slateState = blockTools.blocksToSlateState(blocks, blockContentType)
 
 
 ```
