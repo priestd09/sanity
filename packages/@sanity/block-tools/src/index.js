@@ -1,7 +1,7 @@
 // @flow
 
 import HtmlDeserializer from './HtmlDeserializer'
-import blocksToSlateJson from './converters/blocksToSlateState'
+import blocksToSlateState from './converters/blocksToSlateState'
 import slateStateToBlocks from './converters/slateStateToBlocks'
 import blockContentTypeToOptions from './util/blockContentTypeToOptions'
 
@@ -57,10 +57,12 @@ export default {
   },
 
   /**
-   * Convert blocks to Slate JSON (previously called Raw)
+   * Returns the feature-set of a compiled block content type.
    *
+   * @param {Object} blockContentType
+   * @returns {Object} The feature-set
    */
-  blockTypeFeatures(blockType) {
+  getBlockContentFeatures(blockType) {
     return blockContentTypeToOptions(blockType)
   }
 

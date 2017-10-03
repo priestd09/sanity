@@ -4,7 +4,7 @@ import blockTools from '../../src'
 
 describe('blockTools', () => {
 
-  describe('blockTypeFeatures', () => {
+  describe('getBlockContentTypeFeatures', () => {
 
     it('gives blockType features', () => {
       const blockContentType = defaultSchema.get('blogPost')
@@ -30,7 +30,7 @@ describe('blockTools', () => {
           'blockquote'
         ]
       }
-      assert.deepEqual(blockTools.blockTypeFeatures(blockContentType), expected)
+      assert.deepEqual(blockTools.getBlockContentFeatures(blockContentType), expected)
     })
   })
 

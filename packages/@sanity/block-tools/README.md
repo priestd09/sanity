@@ -47,6 +47,8 @@ const blocks = blockTools.slateStateToBlocks(slateJson, blockContentType)
 // Convert blocks to a JSON serialized Slate state
 const slateState = blockTools.blocksToSlateState(blocks, blockContentType)
 
+// Get the feature-set of a blockContentType
+const features = blockTools.getBlockContentFeatures(blockContentType)
 
 ```
 
@@ -137,9 +139,9 @@ Convert blocks to a serialized Slate state respecting the input schema.
 Convert a slate state to blocks respecting the input schema.
 
 
-### blockTypeFeatures(blockContentType)
+### ``getBlockContentFeatures(blockContentType)``
 
-Will return an object with the features enabled for the input block content schema (compiled).
+Will return an object with the features enabled for the input block content type.
 
 ```js
 {
