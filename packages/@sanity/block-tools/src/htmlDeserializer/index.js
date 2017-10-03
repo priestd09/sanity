@@ -1,7 +1,13 @@
-import resolveJsType from '../util/resolveJsType'
 import {DEFAULT_BLOCK} from '../constants'
-import createRules from './rules'
 import {createRuleOptions, preprocess, defaultParseHtml, tagName} from './helpers'
+import createRules from './rules'
+import resolveJsType from '../util/resolveJsType'
+
+/**
+ * A internal variable to keep track of annotation marks within the 'run' of a block
+ *
+ */
+let _annotationMarks = []
 
 /**
  * HTML Deserializer
@@ -36,7 +42,6 @@ export default class HtmlDeserializer {
       const doc = preprocess(html, parseHtml)
       return doc.body
     }
-    this.activeMarkDefs = []
   }
 
   /**
@@ -174,9 +179,9 @@ export default class HtmlDeserializer {
         node = this.deserializeDecorator(ret)
       } else if (ret._type === '__annotation') {
         node = this.deserializeAnnotation(ret)
-      } else if (ret._type === 'block' && this.activeMarkDefs.length) {
-        ret.markDefs = this.activeMarkDefs
-        this.activeMarkDefs = []
+      } else if (ret._type === 'block' && _annotationMarks.length) {
+        ret.markDefs = _annotationMarks
+        _annotationMarks = [] // Reset _annotationMarks
         node = ret
       } else {
         node = ret
@@ -226,7 +231,7 @@ export default class HtmlDeserializer {
 
   deserializeAnnotation = annotation => {
     const {markDef} = annotation
-    this.activeMarkDefs.push(markDef)
+    _annotationMarks.push(markDef)
     const applyAnnotation = node => {
       if (node._type === '__annotation') {
         return this.deserializeAnnotation(node)
