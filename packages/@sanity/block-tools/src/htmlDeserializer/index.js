@@ -1,7 +1,7 @@
 import resolveJsType from '../util/resolveJsType'
 import {DEFAULT_BLOCK} from '../constants'
 import createRules from './rules'
-import {createRuleOptions, preprocess, defaultParseHtml} from './helpers'
+import {createRuleOptions, preprocess, defaultParseHtml, tagName} from './helpers'
 
 /**
  * HTML Deserializer
@@ -51,8 +51,18 @@ class HtmlDeserializer {
     const children = Array.from(fragment.childNodes)
     let nodes = this.deserializeElements(children)
 
-    // Ensure that all top-level inline nodes are wrapped into a block.
+    // Ensure that all top-level inline nodes are wrapped into a block,
+    // and that there are no blocks as children of a block
     nodes = nodes.reduce((memo, node, i, original) => {
+      if (i > 0 && node._type === 'block' && original[i - 1]._type === 'block') {
+        const block = memo[memo.length - 1]
+        const childBlocks = block.children.filter(child => child._type === 'block')
+        block.children = block.children.filter(child => !childBlocks.includes(child))
+        childBlocks.forEach(cBlock => {
+          memo.push(cBlock)
+        })
+      }
+
       if (node._type === 'block') {
         memo.push(node)
         return memo
@@ -85,7 +95,7 @@ class HtmlDeserializer {
 
   deserializeElements = (elements = []) => {
     let nodes = []
-    elements.forEach(element => {
+    elements.forEach((element, index) => {
       const node = this.deserializeElement(element)
       switch (resolveJsType(node)) {
         case 'array':
@@ -149,6 +159,13 @@ class HtmlDeserializer {
         continue
       } else if (ret === null) {
         return null
+      } else if (ret && ret._type === 'block' && ret.listItem) {
+        let parent = element.parentNode.parentNode
+        while (tagName(parent) === 'li') { // eslint-disable-line max-depth
+          parent = parent.parentNode
+          ret.level++
+        }
+        node = ret
       } else if (ret._type === '__decorator') {
         node = this.deserializeDecorator(ret)
       } else if (ret._type === '__annotation') {

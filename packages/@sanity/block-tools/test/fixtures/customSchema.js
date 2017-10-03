@@ -26,9 +26,7 @@ export default Schema.compile({
                 {title: 'H2', value: 'h2'}
               ],
               // Only allow numbered lists
-              lists: [
-                {title: 'Numbered', value: 'number'}
-              ],
+              lists: [{title: 'Numbered', value: 'number'}],
               marks: {
                 // Only allow these decorators
                 decorators: [
@@ -36,9 +34,7 @@ export default Schema.compile({
                   {title: 'Emphasis', value: 'em'}
                 ],
                 // Support annotating text with a reference to an author
-                annotations: [
-                  {name: 'author', title: 'Author', type: 'reference', to: {type: 'author'}}
-                ]
+                annotations: [{name: 'author', title: 'Author', type: 'reference', to: {type: 'author'}}]
               }
             }
           ]

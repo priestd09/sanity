@@ -1,0 +1,37 @@
+[
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": " One " }],
+    "level": 1,
+    "listItem": "number",
+    "style": "normal"
+  },
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": "a" }],
+    "level": 2,
+    "listItem": "number",
+    "style": "normal"
+  },
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": "b" }],
+    "level": 2,
+    "listItem": "number",
+    "style": "normal"
+  },
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": "Two" }],
+    "level": 1,
+    "listItem": "number",
+    "style": "normal"
+  },
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": "Three" }],
+    "level": 1,
+    "listItem": "number",
+    "style": "normal"
+  }
+]

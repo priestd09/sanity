@@ -8,14 +8,11 @@ import {JSDOM} from 'jsdom'
 import xpath from 'xpath'
 
 describe('htmlDeserializer', () => {
-
   const tests = fs.readdirSync(__dirname)
-
   tests.forEach(test => {
     if (test[0] === '.' || path.extname(test).length > 0) {
       return
     }
-
     it(test, () => {
       const dir = path.resolve(__dirname, test)
       const input = fs.readFileSync(path.resolve(dir, 'input.html')).toString()
@@ -27,6 +24,7 @@ describe('htmlDeserializer', () => {
         evaluate: xpath.evaluate
       }
       const output = fn(input, HtmlDeserializer, commonOptions)
+      // console.log(JSON.stringify(output))
       assert.deepEqual(output, expected)
     })
   })

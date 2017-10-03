@@ -177,7 +177,7 @@ export default function createDefaultRules(blockContentType, options = {}) {
             || !HTML_LIST_CONTAINER_TAGS[tagName(el.parentNode)]) {
           return undefined
         }
-        listItem.data.listItem = resolveListItem(tagName(el.parentNode))
+        listItem.listItem = resolveListItem(tagName(el.parentNode))
         return {
           ...listItem,
           children: next(el.childNodes)
