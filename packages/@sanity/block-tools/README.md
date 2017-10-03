@@ -93,6 +93,14 @@ blockTools.htmlToBlocks(
 
 ```
 
+### slateJsonToBlocks
+
+TODO: write here
+
+### slateJsonToBlocks
+
+TODO: write here
+
 ### blockTypeFeatures(blockContentType)
 
 Will return an object with the features enabled for blockContentType (compiled schema type):
