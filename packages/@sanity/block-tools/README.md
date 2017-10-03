@@ -29,8 +29,9 @@ This will deserialize the input html (string) into blocks.
 
 ##### ``blockContentType``
 
-A compiled version of the block content schema type. When you give this options,
-the deserialization will respect the schema for what is allowed to be in the resulting blocks.
+A compiled version of the block content schema type.
+When you give this option, the deserializer will respect the schema when deserializing to blocks.
+I.e. if the schema doesn't allow h2-styles, all h2 html-elements will deserialized to normal styled blocks.
 
 ##### ``parseHtml``
 The HTML-deserialization is done by default by the browser's native DOMParser.
