@@ -6,7 +6,7 @@ import {
   defaultSupportedDecorators,
   defaultSupportedAnnotations,
 } from './rules/default'
-
+import {DEFAULT_BLOCK} from '../constants'
 
 /**
  * A utility function to create the options needed for the various rule sets,
@@ -74,4 +74,53 @@ export function defaultParseHtml() {
   return html => {
     return new DOMParser().parseFromString(html, 'text/html')
   }
+}
+
+export function flattenNestedBlocks(blocks) {
+  let depth = 0
+  let spliceIndex = 0
+  const traverse = _nodes => {
+    const toRemove = []
+    _nodes.forEach((node, i) => {
+      if (node._type === 'block' && depth > 0) {
+        spliceIndex++
+        toRemove.push(node)
+        blocks.splice(spliceIndex, 0, node)
+      }
+      if (node._type === 'block') {
+        depth++
+        traverse(node.children)
+      }
+    })
+    toRemove.forEach(node => {
+      _nodes.splice(_nodes.indexOf(node), 1)
+    })
+    depth--
+  }
+  traverse(blocks)
+  return blocks
+}
+
+export function ensureRootIsBlocks(blocks) {
+  return blocks.reduce((memo, node, i, original) => {
+
+    if (node._type === 'block') {
+      memo.push(node)
+      return memo
+    }
+
+    if (i > 0 && original[i - 1]._type !== 'block') {
+      const block = memo[memo.length - 1]
+      block.children.push(node)
+      return memo
+    }
+
+    const block = {
+      ...DEFAULT_BLOCK,
+      children: [node]
+    }
+
+    memo.push(block)
+    return memo
+  }, [])
 }

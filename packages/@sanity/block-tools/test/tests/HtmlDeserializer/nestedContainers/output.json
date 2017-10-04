@@ -1,0 +1,45 @@
+[
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": " I'm a quote. " }],
+    "markDefs": [],
+    "style": "blockquote"
+  },
+  {
+    "_type": "block",
+    "children": [
+      {
+        "_type": "span",
+        "marks": [],
+        "text": " And I'm a quote within a quote. "
+      }
+    ],
+    "markDefs": [],
+    "style": "blockquote"
+  },
+  {
+    "_type": "block",
+    "children": [
+      {
+        "_type": "span",
+        "marks": [],
+        "text": " And I'm a quote within a quote within a quote. "
+      }
+    ],
+    "markDefs": [],
+    "style": "blockquote"
+  },
+  {
+    "_type": "block",
+    "children": [
+      {
+        "_type": "span",
+        "marks": [],
+        "text":
+          " And I'm a quote within a quote within a quote within a quote. "
+      }
+    ],
+    "markDefs": [],
+    "style": "blockquote"
+  }
+]

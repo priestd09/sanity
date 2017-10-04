@@ -1,41 +1,49 @@
 [
   {
     "_type": "block",
-    "children": [{ "_type": "span", "marks": [], "text": " One " }],
+    "children": [{ "_type": "span", "marks": [], "text": " 1 a " }],
     "level": 1,
-    "listItem": "number",
+    "listItem": "bullet",
     "markDefs": [],
     "style": "normal"
   },
   {
     "_type": "block",
-    "children": [{ "_type": "span", "marks": [], "text": "a" }],
+    "children": [{ "_type": "span", "marks": [], "text": " 2 a " }],
     "level": 2,
-    "listItem": "number",
+    "listItem": "bullet",
     "markDefs": [],
     "style": "normal"
   },
   {
     "_type": "block",
-    "children": [{ "_type": "span", "marks": [], "text": "b" }],
+    "children": [{ "_type": "span", "marks": [], "text": "3 a" }],
+    "level": 3,
+    "listItem": "bullet",
+    "markDefs": [],
+    "style": "normal"
+  },
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": "3 b" }],
+    "level": 3,
+    "listItem": "bullet",
+    "markDefs": [],
+    "style": "normal"
+  },
+  {
+    "_type": "block",
+    "children": [{ "_type": "span", "marks": [], "text": " 2 b " }],
     "level": 2,
-    "listItem": "number",
+    "listItem": "bullet",
     "markDefs": [],
     "style": "normal"
   },
   {
     "_type": "block",
-    "children": [{ "_type": "span", "marks": [], "text": "Two" }],
+    "children": [{ "_type": "span", "marks": [], "text": " 1 b " }],
     "level": 1,
-    "listItem": "number",
-    "markDefs": [],
-    "style": "normal"
-  },
-  {
-    "_type": "block",
-    "children": [{ "_type": "span", "marks": [], "text": "Three" }],
-    "level": 1,
-    "listItem": "number",
+    "listItem": "bullet",
     "markDefs": [],
     "style": "normal"
   }

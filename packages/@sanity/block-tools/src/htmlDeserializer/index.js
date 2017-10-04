@@ -1,13 +1,19 @@
-import {DEFAULT_BLOCK} from '../constants'
-import {createRuleOptions, preprocess, defaultParseHtml, tagName} from './helpers'
+import {
+  createRuleOptions,
+  defaultParseHtml,
+  ensureRootIsBlocks,
+  flattenNestedBlocks,
+  preprocess,
+  tagName
+} from './helpers'
 import createRules from './rules'
 import resolveJsType from '../util/resolveJsType'
 
 /**
- * A internal variable to keep track of annotation marks within the 'run' of a block
+ * A internal variable to keep track of annotation mark definitions within the 'run' of a block
  *
  */
-let _annotationMarks = []
+let _markDefsWithinBlock = []
 
 /**
  * HTML Deserializer
@@ -36,7 +42,6 @@ export default class HtmlDeserializer {
       createRuleOptions(blockContentType)
     )
     this.rules = [...rules, ...standardRules]
-    this.defaultBlock = DEFAULT_BLOCK
     const parseHtml = options.parseHtml || defaultParseHtml()
     this.parseHtml = html => {
       const doc = preprocess(html, parseHtml)
@@ -53,46 +58,14 @@ export default class HtmlDeserializer {
 
   deserialize = html => {
 
-    const {defaultBlock, parseHtml} = this
+    const {parseHtml} = this
     const fragment = parseHtml(html)
     const children = Array.from(fragment.childNodes)
-    let nodes = this.deserializeElements(children)
-
-    // Ensure that all top-level inline nodes are wrapped into a block,
-    // and that there are no blocks as children of a block
-    nodes = nodes.reduce((memo, node, i, original) => {
-
-      // Move any blocks as children of a block to the root level
-      if (i > 0 && node._type === 'block' && original[i - 1]._type === 'block') {
-        const block = memo[memo.length - 1]
-        const childBlocks = block.children.filter(child => child._type === 'block')
-        block.children = block.children.filter(child => !childBlocks.includes(child))
-        childBlocks.forEach(cBlock => {
-          memo.push(cBlock)
-        })
-      }
-
-      if (node._type === 'block') {
-        memo.push(node)
-        return memo
-      }
-
-      if (i > 0 && original[i - 1]._type !== 'block') {
-        const block = memo[memo.length - 1]
-        block.children.push(node)
-        return memo
-      }
-
-      const block = {
-        ...defaultBlock,
-        children: [node]
-      }
-
-      memo.push(block)
-      return memo
-    }, [])
-
-    return nodes
+    let blocks = this.deserializeElements(children)
+    // Ensure that all top-level objects are wrapped into a block
+    blocks = ensureRootIsBlocks(blocks)
+    // Ensure that there are no blocks within blocks
+    return flattenNestedBlocks(blocks)
   }
 
   /**
@@ -171,7 +144,7 @@ export default class HtmlDeserializer {
       } else if (ret && ret._type === 'block' && ret.listItem) {
         let parent = element.parentNode.parentNode
         while (tagName(parent) === 'li') { // eslint-disable-line max-depth
-          parent = parent.parentNode
+          parent = parent.parentNode.parentNode
           ret.level++
         }
         node = ret
@@ -179,9 +152,9 @@ export default class HtmlDeserializer {
         node = this.deserializeDecorator(ret)
       } else if (ret._type === '__annotation') {
         node = this.deserializeAnnotation(ret)
-      } else if (ret._type === 'block' && _annotationMarks.length) {
-        ret.markDefs = _annotationMarks
-        _annotationMarks = [] // Reset _annotationMarks
+      } else if (ret._type === 'block' && _markDefsWithinBlock.length) {
+        ret.markDefs = _markDefsWithinBlock
+        _markDefsWithinBlock = [] // Reset here
         node = ret
       } else {
         node = ret
@@ -193,7 +166,8 @@ export default class HtmlDeserializer {
   }
 
   /**
-   * Deserialize a `__decorator` object.
+   * Deserialize a `__decorator` type
+   * (an internal made up type to process decorators exclusively)
    *
    * @param {Object} decorator
    * @return {Array}
@@ -224,6 +198,7 @@ export default class HtmlDeserializer {
 
   /**
    * Deserialize a `__annotation` object.
+   * (an internal made up type to process annotations exclusively)
    *
    * @param {Object} annotation
    * @return {Array}
@@ -231,7 +206,7 @@ export default class HtmlDeserializer {
 
   deserializeAnnotation = annotation => {
     const {markDef} = annotation
-    _annotationMarks.push(markDef)
+    _markDefsWithinBlock.push(markDef)
     const applyAnnotation = node => {
       if (node._type === '__annotation') {
         return this.deserializeAnnotation(node)
