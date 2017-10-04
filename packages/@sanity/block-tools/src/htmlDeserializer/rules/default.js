@@ -95,7 +95,7 @@ export default function createDefaultRules(blockContentType, options = {}) {
       deserialize(el, next) {
         if (tagName(el) === 'br') {
           return {
-            kind: 'text',
+            ...DEFAULT_SPAN,
             text: '\n'
           }
         }

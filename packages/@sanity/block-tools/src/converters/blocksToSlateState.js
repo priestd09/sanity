@@ -23,7 +23,6 @@ function toRawMark(markName) {
 }
 
 function sanitySpanToRawSlateBlockNode(span, sanityBlock) {
-
   if (span._type !== 'span') {
     return {
       kind: 'inline',

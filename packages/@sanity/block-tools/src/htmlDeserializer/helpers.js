@@ -78,16 +78,19 @@ export function defaultParseHtml() {
 
 export function flattenNestedBlocks(blocks) {
   let depth = 0
-  let spliceIndex = 0
+  const flattened = []
   const traverse = _nodes => {
     const toRemove = []
     _nodes.forEach((node, i) => {
-      if (node._type === 'block' && depth > 0) {
-        spliceIndex++
-        toRemove.push(node)
-        blocks.splice(spliceIndex, 0, node)
+      if (depth === 0) {
+        flattened.push(node)
       }
       if (node._type === 'block') {
+        if (depth > 0) {
+          toRemove.push(node)
+          // blocks.splice(blocks.indexOf(rootBlock), 0, node)
+          flattened.push(node)
+        }
         depth++
         traverse(node.children)
       }
@@ -98,7 +101,7 @@ export function flattenNestedBlocks(blocks) {
     depth--
   }
   traverse(blocks)
-  return blocks
+  return flattened
 }
 
 export function ensureRootIsBlocks(blocks) {
