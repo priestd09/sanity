@@ -88,7 +88,6 @@ export function flattenNestedBlocks(blocks) {
       if (node._type === 'block') {
         if (depth > 0) {
           toRemove.push(node)
-          // blocks.splice(blocks.indexOf(rootBlock), 0, node)
           flattened.push(node)
         }
         depth++
