@@ -1,9 +1,9 @@
 // @flow
 
-import HtmlDeserializer from './HtmlDeserializer'
-import blocksToSlateState from './converters/blocksToSlateState'
-import slateStateToBlocks from './converters/slateStateToBlocks'
 import blockContentTypeToOptions from './util/blockContentTypeToOptions'
+import blocksToSlateState from './converters/blocksToSlateState'
+import HtmlDeserializer from './HtmlDeserializer'
+import slateStateToBlocks from './converters/slateStateToBlocks'
 
 /**
  * BlockTools - various tools for Sanity block content
@@ -34,7 +34,7 @@ export default {
   },
 
   /**
-   * Convert Slate JSON (previously called Raw) to blocks
+   * Convert a serialized Slate state to blocks
    *
    * @param {Object} An object representing the structure of the Slate JSON.
    * @param {Object} blockContentType
@@ -45,11 +45,11 @@ export default {
   },
 
   /**
-   * Convert blocks to Slate JSON (previously called Raw)
+   * Convert blocks to a serialized Slate state
    *
    * @param {Array} blocks
    * @param {Object} blockContentType
-   * @returns {Object} An object representing the structure of the Slate JSON.
+   * @returns {Object} An object representing the serialized Slate state.
    */
 
   blocksToSlateState(blocks, blockContentType) {
